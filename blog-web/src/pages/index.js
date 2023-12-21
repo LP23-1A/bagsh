@@ -25,7 +25,8 @@ export default function Home() {
     valueRef.current =  value;
   }
 
-  const handlerRouter = (id) => router.push(`id=${id}`)
+  const handlerRouter = (id) => router.push(`articles/${id}`);
+  
   useEffect(() => {
     getData(api);
   }, []);
