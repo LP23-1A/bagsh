@@ -3,8 +3,8 @@ import bp from "body-parser";
 import mongoose from "mongoose";
 import Url from "./Schema/Url.js";
 import { nanoid } from "nanoid";
-import dotenv from 'dotenv'
-
+import dotenv from 'dotenv';
+import cors from 'cors';
 dotenv.config()
 
 const PORT = process.env.PORT || 8000;
@@ -12,6 +12,18 @@ const MONGODB_URL = process.env.MONGODB_URL
 
 const app = express();
 app.use(bp.json());
+app.use(cors({origin : "*"}))
+
+
+
+app.listen(PORT, async () => {
+  try {
+    await mongoose.connect(MONGODB_URL);
+  } catch (error) {
+    console.log("error");
+  }
+  console.log(`connected to mongodb port: ${PORT}`);
+});
 
 app.get("/", async (_, response) => {
   const res = await Url.find();
@@ -46,11 +58,3 @@ app.delete("/:url", async (request, response) => {
   response.send({ success: acknowledged, removedCount: deletedCount }).end();
 });
 
-app.listen(PORT, async () => {
-  try {
-    await mongoose.connect(MONGODB_URL);
-  } catch (error) {
-    console.log("error");
-  }
-  console.log(`connected to mongodb port: ${PORT}`);
-});
